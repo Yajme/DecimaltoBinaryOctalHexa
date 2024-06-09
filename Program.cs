@@ -8,7 +8,7 @@ namespace DecimaltoBinaryOctalHexa
 {
     internal class Program
     {
-        static Dictionary<string, int> NumberSet = new Dictionary<string, int>
+        static readonly Dictionary<string, int> NumberSet = new Dictionary<string, int>
         {
             { "Binary" , 2 },
             { "Octal",8 },
@@ -16,20 +16,24 @@ namespace DecimaltoBinaryOctalHexa
         };
         static void Main(string[] args)
         {
-            Console.Write("Enter a decimal number: ");
-            try
+            while (true)
             {
-                int decimalNumber = int.Parse(Console.ReadLine());
-                foreach(var item in NumberSet)
+                Console.Write("Enter a decimal number: ");
+                try
                 {
-                    Console.WriteLine($"{item.Key} : {ConvertToBase(decimalNumber, item.Value)}");
+                    int decimalNumber = int.Parse(Console.ReadLine());
+                    foreach (var item in NumberSet)
+                    {
+                        Console.WriteLine($"{item.Key} : {ConvertToBase(decimalNumber, item.Value)}");
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                Console.ReadKey();
             }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            Console.ReadKey();
+            
         }
 
         static string ConvertToBase(int number, int toBase)
@@ -42,15 +46,18 @@ namespace DecimaltoBinaryOctalHexa
             string result = string.Empty;
             string characters = "0123456789ABCDEF";
 
+            bool isNegative = number < 0;
+            number = number < 0 ? -number : number;
+
             do
             {
                 int remainder = number % toBase;
                 result = characters[remainder] + result;
                 number /= toBase;
+               
             } while (number > 0);
 
-            return result;
-
+            return isNegative ? $"-{result}" : result;
         }
     }
 }
